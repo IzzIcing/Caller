@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Fake Phone Dialer</title>
+  <title>Caller</title>
   <style>
     body {
       background: black;
@@ -81,12 +81,12 @@
       <button onclick="press('0')">0</button>
       <button onclick="press('#')">#</button>
     </div>
-    <button id="callBtn" onclick="makeCall()">Call</button>
+    <button id="callBtn" onclick="press()">Call</button>
   </div>
 
   <!-- Audio files -->
   <audio id="dialSound" src="Dial.mp3"></audio>
-  <audio id="outOfService" src="Out of Service.mp3"></audio>
+  <audio id="outOfservice" src="Out of Service.mp3"></audio>
   <audio id="caller" src="Caller.mp3"></audio>
 
   <script>
