@@ -81,14 +81,14 @@
       <button onclick="press('0')">0</button>
       <button onclick="press('#')">#</button>
     </div>
-    <!-- FIXED: Call button now calls makeCall() -->
+    <!-- Call button triggers makeCall() -->
     <button id="callBtn" onclick="makeCall()">Call</button>
   </div>
 
   <!-- Audio files -->
   <audio id="dialSound" src="Dial.mp3"></audio>
-  <!-- FIXED: ID matches JS exactly -->
-  <audio id="outOfService" src="Out of Service.mp3"></audio>
+  <!-- Renamed file to outofservice.mp3 -->
+  <audio id="outOfService" src="outofservice.mp3"></audio>
   <audio id="caller" src="Caller.mp3"></audio>
 
   <script>
