@@ -72,9 +72,9 @@
     }
     #clearBtn {
       margin-top: 15px;
-      width: 90px;
-      height: 40px;
-      border-radius: 8px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
       background: red;
       color: white;
       font-size: 16px;
@@ -105,13 +105,14 @@
       <button class="key" onclick="press('#')">#</button>
     </div>
     <button id="callBtn" onclick="makeCall()">📞</button>
-    <!-- New Clear button -->
-    <button id="clearBtn" onclick="clearNumber()">Clear</button>
+    <!-- Circular Clear button -->
+    <button id="clearBtn" onclick="clearNumber()">✖</button>
   </div>
 
   <!-- Audio files -->
   <audio id="dialSound" src="Dial.mp3"></audio>
-  <audio id="outOfService" src="outofservice.mp3"></audio>
+  <!-- Updated filename to OutOfService.mp3 -->
+  <audio id="outOfService" src="OutOfService.mp3"></audio>
   <audio id="caller" src="Caller.mp3"></audio>
 
   <script>
