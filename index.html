@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fake Phone Dialer</title>
+  <style>
+    body {
+      background: black;
+      color: white;
+      font-family: sans-serif;
+      text-align: center;
+    }
+    .phone {
+      margin: 50px auto;
+      width: 260px;
+      padding: 20px;
+      border: 4px solid #555;
+      border-radius: 40px;
+      background: #111;
+      box-shadow: 0 0 20px rgba(0,255,0,0.3);
+    }
+    #phoneNumber {
+      width: 220px;
+      margin: 10px auto 20px;
+      font-size: 22px;
+      text-align: center;
+      background: black;
+      color: lime;
+      border: none;
+      outline: none;
+    }
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 70px);
+      gap: 10px;
+      justify-content: center;
+    }
+    button {
+      padding: 20px;
+      font-size: 20px;
+      border-radius: 8px;
+      background: #222;
+      color: white;
+      border: 1px solid #555;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #444;
+    }
+    #callBtn {
+      margin-top: 20px;
+      width: 220px;
+      padding: 15px;
+      font-size: 20px;
+      background: green;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #callBtn:hover {
+      background: darkgreen;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <h2>Dial a Number</h2>
+    <input type="text" id="phoneNumber" readonly maxlength="10" />
+    <div class="keypad">
+      <button onclick="press('1')">1</button>
+      <button onclick="press('2')">2</button>
+      <button onclick="press('3')">3</button>
+      <button onclick="press('4')">4</button>
+      <button onclick="press('5')">5</button>
+      <button onclick="press('6')">6</button>
+      <button onclick="press('7')">7</button>
+      <button onclick="press('8')">8</button>
+      <button onclick="press('9')">9</button>
+      <button onclick="press('*')">*</button>
+      <button onclick="press('0')">0</button>
+      <button onclick="press('#')">#</button>
+    </div>
+    <button id="callBtn" onclick="makeCall()">Call</button>
+  </div>
+
+  <!-- Audio files -->
+  <audio id="dialSound" src="Dial.mp3"></audio>
+  <audio id="outOfService" src="Out of Service.mp3"></audio>
+  <audio id="caller" src="Caller.mp3"></audio>
+
+  <script>
+    function press(num) {
+      const input = document.getElementById("phoneNumber");
+      if (input.value.length < 10) {
+        input.value += num;
+        document.getElementById("dialSound").play();
+      }
+    }
+
+    function makeCall() {
+      const number = document.getElementById("phoneNumber").value;
+      if (number === "4025123146") {
+        playAndReset("caller");
+      } else {
+        playAndReset("outOfService");
+      }
+    }
+
+    function playAndReset(audioId) {
+      const audio = document.getElementById(audioId);
+      audio.play();
+      audio.onended = () => {
+        document.getElementById("phoneNumber").value = "";
+      };
+    }
+  </script>
+</body>
+</html>
