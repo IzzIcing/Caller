@@ -6,23 +6,22 @@
   <style>
     body {
       background: black;
-      color: white;
       font-family: sans-serif;
       text-align: center;
+      color: white;
     }
     .phone {
-      margin: 50px auto;
-      width: 260px;
+      margin: 40px auto;
+      width: 300px;
       padding: 20px;
-      border: 4px solid #555;
       border-radius: 40px;
       background: #111;
-      box-shadow: 0 0 20px rgba(0,255,0,0.3);
+      box-shadow: 0 0 25px rgba(0,255,0,0.4);
     }
     #phoneNumber {
-      width: 220px;
+      width: 260px;
       margin: 10px auto 20px;
-      font-size: 22px;
+      font-size: 24px;
       text-align: center;
       background: black;
       color: lime;
@@ -31,35 +30,59 @@
     }
     .keypad {
       display: grid;
-      grid-template-columns: repeat(3, 70px);
-      gap: 10px;
+      grid-template-columns: repeat(3, 90px);
+      gap: 15px;
       justify-content: center;
     }
-    button {
-      padding: 20px;
-      font-size: 20px;
-      border-radius: 8px;
+    .key {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
       background: #222;
+      border: 2px solid #555;
       color: white;
-      border: 1px solid #555;
+      font-size: 22px;
       cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
-    button:hover {
-      background: #444;
+    .letters {
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 4px;
+    }
+    .key:hover {
+      background: #333;
     }
     #callBtn {
-      margin-top: 20px;
-      width: 220px;
-      padding: 15px;
-      font-size: 20px;
+      margin-top: 25px;
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
       background: green;
       color: white;
+      font-size: 26px;
       border: none;
-      border-radius: 8px;
       cursor: pointer;
     }
     #callBtn:hover {
       background: darkgreen;
+    }
+    #clearBtn {
+      margin-top: 15px;
+      width: 90px;
+      height: 40px;
+      border-radius: 8px;
+      background: red;
+      color: white;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+    }
+    #clearBtn:hover {
+      background: darkred;
     }
   </style>
 </head>
@@ -68,26 +91,26 @@
     <h2>Dial a Number</h2>
     <input type="text" id="phoneNumber" readonly maxlength="10" />
     <div class="keypad">
-      <button onclick="press('1')">1</button>
-      <button onclick="press('2')">2</button>
-      <button onclick="press('3')">3</button>
-      <button onclick="press('4')">4</button>
-      <button onclick="press('5')">5</button>
-      <button onclick="press('6')">6</button>
-      <button onclick="press('7')">7</button>
-      <button onclick="press('8')">8</button>
-      <button onclick="press('9')">9</button>
-      <button onclick="press('*')">*</button>
-      <button onclick="press('0')">0</button>
-      <button onclick="press('#')">#</button>
+      <button class="key" onclick="press('1')">1<div class="letters"></div></button>
+      <button class="key" onclick="press('2')">2<div class="letters">ABC</div></button>
+      <button class="key" onclick="press('3')">3<div class="letters">DEF</div></button>
+      <button class="key" onclick="press('4')">4<div class="letters">GHI</div></button>
+      <button class="key" onclick="press('5')">5<div class="letters">JKL</div></button>
+      <button class="key" onclick="press('6')">6<div class="letters">MNO</div></button>
+      <button class="key" onclick="press('7')">7<div class="letters">PQRS</div></button>
+      <button class="key" onclick="press('8')">8<div class="letters">TUV</div></button>
+      <button class="key" onclick="press('9')">9<div class="letters">WXYZ</div></button>
+      <button class="key" onclick="press('*')">*</button>
+      <button class="key" onclick="press('0')">0<div class="letters">+</div></button>
+      <button class="key" onclick="press('#')">#</button>
     </div>
-    <!-- Call button triggers makeCall() -->
-    <button id="callBtn" onclick="makeCall()">Call</button>
+    <button id="callBtn" onclick="makeCall()">📞</button>
+    <!-- New Clear button -->
+    <button id="clearBtn" onclick="clearNumber()">Clear</button>
   </div>
 
   <!-- Audio files -->
   <audio id="dialSound" src="Dial.mp3"></audio>
-  <!-- Renamed file to outofservice.mp3 -->
   <audio id="outOfService" src="outofservice.mp3"></audio>
   <audio id="caller" src="Caller.mp3"></audio>
 
@@ -115,6 +138,10 @@
       audio.onended = () => {
         document.getElementById("phoneNumber").value = "";
       };
+    }
+
+    function clearNumber() {
+      document.getElementById("phoneNumber").value = "";
     }
   </script>
 </body>
