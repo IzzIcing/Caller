@@ -325,7 +325,7 @@
             <div class="app-icon bg-phone">📞</div>
             <div class="app-label">Phone</div>
           </div>
-          <div class="app-item" onclick="triggerAlert('No New Messages', 'You currently do not have any unread text strings or notifications.')">
+          <div class="app-item" onclick="triggerAlert('Inbox Empty', 'No Message found')">
             <div class="app-icon bg-messages">💬</div>
             <div class="app-label">Messages</div>
           </div>
@@ -526,11 +526,8 @@
     let totalSeconds = 0;
     let activeAudio = null;
     let isVoicemailPlaying = false;
-    
-    // Tracks what layout view you were last using inside the Phone application
     let lastPhoneTab = 'keypad';
 
-    // Contact Database Configurations - Added Grandma Data Configuration
     const contactBook = {
       'Grandma': { number: '(402) 444-4444', clean: '4024444444', audioId: 'audio-Grandma' },
       'Mom': { number: '(402) 111-1111', clean: '4021111111', audioId: 'audio-Mom' },
@@ -539,21 +536,16 @@
       'Caller': { number: '(402) 512-3146', clean: '4025123146', audioId: 'audio-Caller' }
     };
 
-    // Main App Navigation View Helper
     function navigateToScreen(screenId) {
       if(screenId !== 'dialerScreen') { stopVoicemail(); }
-
       document.getElementById("homeScreen").style.display = (screenId === "homeScreen") ? "flex" : "none";
       document.getElementById("dialerScreen").style.display = (screenId === "dialerScreen") ? "flex" : "none";
       document.getElementById("callScreen").style.display = (screenId === "callScreen") ? "flex" : "none";
     }
 
-    // Phone App Internal Tab Controller
     function switchPhoneTab(tabName) {
       stopVoicemail();
-      lastPhoneTab = tabName; // Remembers where you are browsing
-      
-      // Update Tab Highlights
+      lastPhoneTab = tabName;
       const tabs = ['favorites', 'recents', 'contacts', 'keypad', 'voicemail'];
       tabs.forEach(t => {
         document.getElementById(`tab-${t}`).classList.remove('active');
@@ -563,18 +555,14 @@
       document.getElementById(`view-${tabName}`).classList.add('active-view');
     }
 
-    // Modal UI Alert Handlers
     function triggerAlert(title, message) {
       document.getElementById("alertTitle").innerText = title;
       document.getElementById("alertMessage").innerText = message;
       document.getElementById("alertOverlay").style.display = "flex";
     }
 
-    function closeAlert() {
-      document.getElementById("alertOverlay").style.display = "none";
-    }
+    function closeAlert() { document.getElementById("alertOverlay").style.display = "none"; }
 
-    // Dialer Phone Keypad Inputs logic 
     function updateBackspaceVisibility() {
       const input = document.getElementById("phoneNumber");
       const backspaceBtn = document.getElementById("backspaceBtn");
@@ -597,17 +585,15 @@
       updateBackspaceVisibility();
     }
 
-    // Call Engine Handlers
     function makeCall() {
       const number = document.getElementById("phoneNumber").value;
       if (!number) return;
 
       let targetName = formatPhoneNumber(number);
       let targetAudio = document.getElementById("outOfService");
-      // Loop through registered directory to match exact numbers
+
       for (let key in contactBook) {
         if (contactBook[key].clean === number) {
-          // If it matches 'Caller', display the formatted phone number instead of text name
           targetName = (key === 'Caller') ? contactBook[key].number : key;
           targetAudio = document.getElementById(contactBook[key].audioId);
           break;
@@ -627,7 +613,6 @@
       stopVoicemail();
       document.getElementById("displayCallerName").innerText = nameText;
       activeAudio = audioAsset;
-
       navigateToScreen('callScreen');
 
       if (activeAudio) {
@@ -638,11 +623,9 @@
       startTimer();
     }
 
-    // Playback engine for custom standalone voicemail tab item
     function playVoicemail() {
       const vAudio = document.getElementById('audio-voicemail');
       const rowItem = document.getElementById('sisterVoicemailRow');
-
       if (isVoicemailPlaying) {
         stopVoicemail();
       } else {
@@ -658,21 +641,14 @@
     function stopVoicemail() {
       const vAudio = document.getElementById('audio-voicemail');
       const rowItem = document.getElementById('sisterVoicemailRow');
-      if (vAudio) {
-        vAudio.pause();
-        vAudio.currentTime = 0;
-      }
-      if (rowItem) {
-        rowItem.classList.remove('playing-state');
-      }
+      if (vAudio) { vAudio.pause(); vAudio.currentTime = 0; }
+      if (rowItem) { rowItem.classList.remove('playing-state'); }
       isVoicemailPlaying = false;
       if (activeAudio === vAudio) { activeAudio = null; }
     }
 
     function formatPhoneNumber(str) {
-      if(str.length === 10) {
-        return `(${str.slice(0,3)}) ${str.slice(3,6)}-${str.slice(6)}`;
-      }
+      if(str.length === 10) { return `(${str.slice(0,3)}) ${str.slice(3,6)}-${str.slice(6)}`; }
       return str;
     }
 
@@ -689,14 +665,10 @@
 
     function endCall() {
       clearInterval(timerInterval);
-      if (activeAudio) { activeAudio.pause(); activeAudio.currentTime = 0; activeAudio.null; }
-
-      // Reset dialer UI inputs cleanly
+      if (activeAudio) { activeAudio.pause(); activeAudio.currentTime = 0; activeAudio = null; }
       document.getElementById("phoneNumber").value = "";
       updateBackspaceVisibility();
       document.getElementById("muteBtn").classList.remove("active-state");
-      
-      // Navigates straight back to the tab you initiated the call from
       navigateToScreen('dialerScreen');
       switchPhoneTab(lastPhoneTab);
     }
