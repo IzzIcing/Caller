@@ -236,35 +236,11 @@
     #endCallBtn svg { width: 32px; height: 32px; fill: #fff; transform: rotate(135deg); }
 
     /* iOS System Alert Modal Design */
-    .ios-alert-overlay {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.35);
-      z-index: 999;
-      display: none;
-      justify-content: center;
-      align-items: center;
-    }
-    .ios-alert-box {
-      width: 270px;
-      background: rgba(245, 245, 245, 0.9);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 14px;
-      text-align: center;
-      animation: popIn 0.2s ease-out;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    }
+    .ios-alert-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.35); z-index: 999; display: none; justify-content: center; align-items: center; }
+    .ios-alert-box { width: 270px; background: rgba(245, 245, 245, 0.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 14px; text-align: center; animation: popIn 0.2s ease-out; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
     .ios-alert-title { font-size: 17px; font-weight: 600; padding: 18px 16px 4px 16px; color: #000; }
     .ios-alert-message { font-size: 13px; font-weight: 400; padding: 0 16px 18px 16px; color: #000; line-height: 1.4; }
-    .ios-alert-btn {
-      border-top: 0.5px solid rgba(0,0,0,0.15);
-      color: #007AFF;
-      font-size: 17px;
-      font-weight: 600;
-      padding: 12px 0;
-      cursor: pointer;
-    }
+    .ios-alert-btn { border-top: 0.5px solid rgba(0,0,0,0.15); color: #007AFF; font-size: 17px; font-weight: 600; padding: 12px 0; cursor: pointer; }
     .ios-alert-btn:active { background: rgba(0,0,0,0.05); border-radius: 0 0 14px 14px; }
 
     @keyframes popIn {
@@ -415,6 +391,12 @@
 
         <div class="phone-app-content" id="view-contacts">
           <div class="dialer-screen-title">Contacts</div>
+          <div class="ios-list-row" onclick="initiateContactCall('Grandma')">
+            <div>
+              <div class="row-main-text">Grandma</div>
+              <div class="row-sub-text">(402) 444-4444</div>
+            </div>
+          </div>
           <div class="ios-list-row" onclick="initiateContactCall('Little Sister')">
             <div>
               <div class="row-main-text">Little Sister</div>
@@ -537,6 +519,7 @@
   <audio id="audio-LittleSister" src="LittlesisterCall.mp3"></audio>
   <audio id="audio-voicemail" src="Littlesistervoicemail.mp3"></audio>
   <audio id="audio-Caller" src="Caller.mp3"></audio>
+  <audio id="audio-Grandma" src="Grandmavoicemail.mp3"></audio>
 
   <script>
     let timerInterval = null;
@@ -547,8 +530,9 @@
     // Tracks what layout view you were last using inside the Phone application
     let lastPhoneTab = 'keypad';
 
-    // Contact Database Configurations
+    // Contact Database Configurations - Added Grandma Data Configuration
     const contactBook = {
+      'Grandma': { number: '(402) 444-4444', clean: '4024444444', audioId: 'audio-Grandma' },
       'Mom': { number: '(402) 111-1111', clean: '4021111111', audioId: 'audio-Mom' },
       'Older Sister': { number: '(402) 222-2222', clean: '4022222222', audioId: 'audio-OlderSister' },
       'Little Sister': { number: '(402) 333-3333', clean: '4023333333', audioId: 'audio-LittleSister' },
@@ -575,7 +559,6 @@
         document.getElementById(`tab-${t}`).classList.remove('active');
         document.getElementById(`view-${t}`).classList.remove('active-view');
       });
-
       document.getElementById(`tab-${tabName}`).classList.add('active');
       document.getElementById(`view-${tabName}`).classList.add('active-view');
     }
@@ -621,7 +604,6 @@
 
       let targetName = formatPhoneNumber(number);
       let targetAudio = document.getElementById("outOfService");
-
       // Loop through registered directory to match exact numbers
       for (let key in contactBook) {
         if (contactBook[key].clean === number) {
@@ -638,7 +620,6 @@
     function initiateContactCall(contactKey) {
       const contact = contactBook[contactKey];
       if (!contact) return;
-      
       executeCallScreen(contactKey, document.getElementById(contact.audioId));
     }
 
@@ -708,7 +689,7 @@
 
     function endCall() {
       clearInterval(timerInterval);
-      if (activeAudio) { activeAudio.pause(); activeAudio.currentTime = 0; activeAudio = null; }
+      if (activeAudio) { activeAudio.pause(); activeAudio.currentTime = 0; activeAudio.null; }
 
       // Reset dialer UI inputs cleanly
       document.getElementById("phoneNumber").value = "";
