@@ -536,6 +536,7 @@
   <audio id="audio-OlderSister" src="OldersisterCall.mp3"></audio>
   <audio id="audio-LittleSister" src="LittlesisterCall.mp3"></audio>
   <audio id="audio-voicemail" src="Littlesistervoicemail.mp3"></audio>
+  <audio id="audio-Caller" src="Caller.mp3"></audio>
 
   <script>
     let timerInterval = null;
@@ -550,7 +551,8 @@
     const contactBook = {
       'Mom': { number: '(402) 111-1111', clean: '4021111111', audioId: 'audio-Mom' },
       'Older Sister': { number: '(402) 222-2222', clean: '4022222222', audioId: 'audio-OlderSister' },
-      'Little Sister': { number: '(402) 333-3333', clean: '4023333333', audioId: 'audio-LittleSister' }
+      'Little Sister': { number: '(402) 333-3333', clean: '4023333333', audioId: 'audio-LittleSister' },
+      'Caller': { number: '(402) 512-3146', clean: '4025123146', audioId: 'audio-Caller' }
     };
 
     // Main App Navigation View Helper
@@ -585,10 +587,6 @@
       document.getElementById("alertOverlay").style.display = "flex";
     }
 
-    function closeAlert() {
-      document.getElementById("alertOverlay").style.display = "none";
-    }
-
     // Dialer Phone Keypad Inputs logic 
     function updateBackspaceVisibility() {
       const input = document.getElementById("phoneNumber");
@@ -620,9 +618,11 @@
       let targetName = formatPhoneNumber(number);
       let targetAudio = document.getElementById("outOfService");
 
+      // Loop through registered directory to match exact numbers
       for (let key in contactBook) {
         if (contactBook[key].clean === number) {
-          targetName = key;
+          // If it matches 'Caller', display the formatted phone number instead of text name
+          targetName = (key === 'Caller') ? contactBook[key].number : key;
           targetAudio = document.getElementById(contactBook[key].audioId);
           break;
         }
@@ -711,7 +711,7 @@
       updateBackspaceVisibility();
       document.getElementById("muteBtn").classList.remove("active-state");
       
-      // FIX: Navigates straight back to the tab you initiated the call from
+      // Navigates straight back to the tab you initiated the call from
       navigateToScreen('dialerScreen');
       switchPhoneTab(lastPhoneTab);
     }
