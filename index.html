@@ -88,6 +88,7 @@
       flex-direction: column;
       align-items: center;
       cursor: pointer;
+      position: relative;
     }
 
     .app-icon {
@@ -134,6 +135,10 @@
     .bg-phone { background: #4CD964; }
     .bg-messages { background: #34C759; }
     .bg-safari { background: #FFF; background: radial-gradient(circle, #FFF 20%, #E0E0E0 100%); }
+    
+    /* Native Apple Notes App Icon Styling Additions */
+    .bg-notes { background: linear-gradient(to bottom, #FFD60A 0%, #FFC400 22%, #F2F2F7 22%, #FFFFFF 100%); color: #000; }
+    .unread-badge { position: absolute; top: -4px; right: 4px; background: #FF3B30; color: #fff; font-size: 12px; font-weight: 600; min-width: 18px; height: 18px; border-radius: 9px; display: flex; justify-content: center; align-items: center; padding: 0 4px; box-sizing: border-box; z-index: 5; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
     .dock-container {
       position: absolute;
@@ -235,6 +240,20 @@
     #endCallBtn { width: 72px; height: 72px; border-radius: 50%; background: #ff3b30; border: none; cursor: pointer; display: flex; justify-content: center; align-items: center; }
     #endCallBtn svg { width: 32px; height: 32px; fill: #fff; transform: rotate(135deg); }
 
+    /* --- NOTES APPLICATION VIEW --- */
+    #notesScreen { display: none; flex-direction: column; height: 100%; background: #1c1c1e; color: #fff; }
+    .notes-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px 8px 16px; }
+    .notes-back-btn { color: #e5b324; font-size: 24px; font-weight: 400; display: flex; align-items: center; cursor: pointer; text-decoration: none; background: transparent; border: none; outline: none; padding: 0; }
+    .notes-main-title { font-size: 34px; font-weight: 700; padding: 0 20px 10px 20px; color: #fff; }
+    .notes-container { padding: 0 20px; flex: 1; overflow-y: auto; }
+    .notes-list-box { background: #2c2c2e; border-radius: 12px; overflow: hidden; }
+    .notes-item-row { padding: 12px 16px; border-bottom: 0.5px solid #3a3a3c; cursor: pointer; }
+    .notes-item-row:last-child { border-bottom: none; }
+    .notes-item-title { font-size: 17px; font-weight: 600; color: #fff; }
+    .notes-item-meta { font-size: 14px; color: #8e8e93; margin-top: 4px; display: flex; gap: 8px; }
+    .notes-body-view { display: none; padding: 16px 20px; flex: 1; overflow-y: auto; font-size: 16px; line-height: 1.5; color: #e5e5ea; }
+    .notes-body-title { font-size: 26px; font-weight: 700; margin-bottom: 16px; color: #fff; border-bottom: 0.5px solid #3a3a3c; padding-bottom: 10px; }
+
     /* iOS System Alert Modal Design */
     .ios-alert-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.35); z-index: 999; display: none; justify-content: center; align-items: center; }
     .ios-alert-box { width: 270px; background: rgba(245, 245, 245, 0.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 14px; text-align: center; animation: popIn 0.2s ease-out; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
@@ -253,6 +272,7 @@
     #homeScreen .home-indicator { background: #fff; }
     #dialerScreen .home-indicator { background: #000; }
     #callScreen .home-indicator { background: #fff; display: none; }
+    #notesScreen .home-indicator { background: #fff; }
   </style>
 </head>
 <body>
@@ -317,6 +337,13 @@
           <div class="app-item" onclick="triggerAlert('No Internet Connection', 'Please connect to a cellular or Wi-Fi network to access this application.')">
             <div class="app-icon bg-appstore">A</div>
             <div class="app-label">App Store</div>
+          </div>
+          
+          <!-- Native iPhone Notes Integration App Block Selection -->
+          <div class="app-item" onclick="openNotesApp()">
+            <div class="unread-badge" id="notesBadge">1</div>
+            <div class="app-icon bg-notes">📝</div>
+            <div class="app-label">Notes</div>
           </div>
         </div>
 
@@ -508,6 +535,49 @@
         <div class="home-indicator" style="background: #fff; display: block;"></div>
       </div>
 
+      <!-- --- NEW NATIVE NOTES SCREEN MODULE --- -->
+      <div id="notesScreen">
+        <div class="status-bar-base status-bar-dark">
+          <div class="status-time-asset">2:05</div>
+          <div class="status-icons-asset">
+            <span class="status-5g-asset">5G</span>
+            <div class="battery-icon-asset"><div class="battery-level-asset"></div></div>
+          </div>
+        </div>
+
+        <!-- Note Sub-View Index/List Layout Container -->
+        <div id="notesIndexView" style="display: flex; flex-direction: column; flex: 1;">
+          <div class="notes-header">
+            <button class="notes-back-btn" onclick="navigateToScreen('homeScreen')">🏠 Home</button>
+          </div>
+          <div class="notes-main-title">Notes</div>
+          <div class="notes-container">
+            <div class="notes-list-box">
+              <div class="notes-item-row" onclick="viewNoteDetail()">
+                <div class="notes-item-title">Read This</div>
+                <div class="notes-item-meta">
+                  <span>Today</span>
+                  <span>Hey Welcome! Thank you...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Note Detailed Message Sub-View Container -->
+        <div id="notesDetailView" class="notes-body-view">
+          <div style="margin-bottom: 20px;">
+            <button class="notes-back-btn" onclick="backToNotesIndex()">&lsaquo; Notes</button>
+          </div>
+          <div class="notes-body-title">Read This</div>
+          <p>Hey Welcome! Thank you for checking out my website and you being curious about this Phone thing, I made this since I have friends that's not from US and unable to hear the project I'm in so I created this.</p>
+          <p>The instruction are simple on the Caller Phone dial the number 4025123146 make a call and that's it! And yes this phone number can also be called when you're living in US you can give it a try.</p>
+          <p>Also you can freely explore or interact with this phone there are limitations to the apps but the Caller App, all of the voice messages is made by me so... Enjoy? HAHAHAHA</p>
+        </div>
+
+        <div class="home-indicator" onclick="navigateToScreen('homeScreen')"></div>
+      </div>
+
     </div>
   </div>
 
@@ -541,6 +611,7 @@
       document.getElementById("homeScreen").style.display = (screenId === "homeScreen") ? "flex" : "none";
       document.getElementById("dialerScreen").style.display = (screenId === "dialerScreen") ? "flex" : "none";
       document.getElementById("callScreen").style.display = (screenId === "callScreen") ? "flex" : "none";
+      document.getElementById("notesScreen").style.display = (screenId === "notesScreen") ? "flex" : "none";
     }
 
     function switchPhoneTab(tabName) {
@@ -674,6 +745,24 @@
     }
 
     function toggleMute() { document.getElementById("muteBtn").classList.toggle("active-state"); }
+
+    /* --- NEW NOTES APP ROUTING LOGIC HANDLERS --- */
+    function openNotesApp() {
+      document.getElementById("notesBadge").style.display = "none";
+      document.getElementById("notesIndexView").style.display = "flex";
+      document.getElementById("notesDetailView").style.display = "none";
+      navigateToScreen('notesScreen');
+    }
+
+    function viewNoteDetail() {
+      document.getElementById("notesIndexView").style.display = "none";
+      document.getElementById("notesDetailView").style.display = "block";
+    }
+
+    function backToNotesIndex() {
+      document.getElementById("notesDetailView").style.display = "none";
+      document.getElementById("notesIndexView").style.display = "flex";
+    }
   </script>
 </body>
 </html>
